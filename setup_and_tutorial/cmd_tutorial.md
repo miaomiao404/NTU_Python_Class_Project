@@ -61,10 +61,12 @@ code .
 
 ---
 
-## 2. VS Code 與 Miniconda powershell連接
+## 2. VS Code powershell 與 Miniconda powershell連接
 
 ### 為什麼 Windows 的 PowerShell 找不到 `conda`？
 當安裝完 Miniconda 後， Windows 開始選單裡會多一個 **"Anaconda Prompt (Miniconda3)"**。由於各種原因，如果沒有執行以下設定， `conda` 指令僅在此 powershell 可運行。
+
+> 在 VS Code 中，下方的 Terminal (終端機) 其實就是 Windows 的 powershell。
 
 ### 如何解決？(Conda 初始化)
 
