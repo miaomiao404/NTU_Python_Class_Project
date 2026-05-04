@@ -1,0 +1,22 @@
+[
+  {
+    "font_id": "font_001",
+    "font_name": "default_standard_font",
+    "file_path": "fonts/default.ttf",
+    "tags": {
+      "style": ["regular", "standard"],
+      "stroke": ["medium"],
+      "mood": ["neutral"]
+    }
+  },
+  {
+    "font_id": "font_002",
+    "font_name": "test_round_handwriting",
+    "file_path": "fonts/test_hand.ttf",
+    "tags": {
+      "style": ["round", "handwriting"],
+      "stroke": ["thin"],
+      "mood": ["warm", "cute"]
+    }
+  }
+]
