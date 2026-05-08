@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>FontMimic-Web 核心功能測試版</title>
+</head>
+<body>
+    <h1>FontMimic-Web (開發測試版)</h1>
+    <p>狀態：後端連線測試中 | 僅供電腦版滑鼠測試</p>
+    <hr>
+
+    <div id="section-upload">
+        <h2>步驟 1：上傳參考字體</h2>
+        <input type="file" id="imageInput" accept="image/*">
+        <br><br>
+        <img id="previewImage" style="max-width: 300px; display: none;" alt="預覽圖">
+        <br><br>
+        <button id="btnAnalyze" disabled>解析字體風格</button>
+        <p id="analyzeResult">請先上傳圖片...</p>
+    </div>
+    <hr>
+
+    <div id="section-generate">
+        <h2>步驟 2：生成參考圖</h2>
+        <input type="text" id="practiceTextInput" placeholder="請輸入想練習的文字 (例如：你好)">
+        <button id="btnGenerate" disabled>生成參考圖</button>
+        <br><br>
+        <img id="referenceImage" style="max-width: 300px; display: none;" alt="參考圖片">
+    </div>
+    <hr>
+
+    <div id="section-practice">
+        <h2>步驟 3：手寫練習區</h2>
+        <canvas id="mimicCanvas" width="1000" height="400" style="border: 1px solid black; cursor: crosshair;"></canvas>
+        <br><br>
+        <button id="btnClear">清除畫布</button>
+        <button id="btnScore">送出評分</button>
+    </div>
+    <hr>
+
+    <div id="section-feedback">
+        <h2>步驟 4：評分與建議</h2>
+        <h3 id="scoreText">分數：尚未評分</h3>
+        <p id="feedbackText">AI 建議：無</p>
+    </div>
+
+    <script>
+        // 1. 全域狀態管理 (State)
+        let currentUploadedBase64 = ""; // 儲存上傳圖片的 Base64
+        let currentAiTags = null;       // 儲存 AI 解析後的標籤
+        const API_BASE_URL = "http://127.0.0.1:8000"; // 預設 FastAPI 網址
+
+        // 2. DOM 元素抓取
+        const imageInput = document.getElementById('imageInput');
+        const previewImage = document.getElementById('previewImage');
+        const btnAnalyze = document.getElementById('btnAnalyze');
+        const analyzeResult = document.getElementById('analyzeResult');
+
+        const practiceTextInput = document.getElementById('practiceTextInput');
+        const btnGenerate = document.getElementById('btnGenerate');
+        const referenceImage = document.getElementById('referenceImage');
+
+        const canvas = document.getElementById('mimicCanvas');
+        const ctx = canvas.getContext('2d');
+        const btnClear = document.getElementById('btnClear');
+        const btnScore = document.getElementById('btnScore');
+        const scoreText = document.getElementById('scoreText');
+        const feedbackText = document.getElementById('feedbackText');
+
+        // 3. Canvas 繪圖引擎初始化 (僅滑鼠事件)
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "#333333";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+
+        let isDrawing = false;
+
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            const pos = getCoordinates(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const pos = getCoordinates(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('mouseup', () => { isDrawing = false; ctx.closePath(); });
+        canvas.addEventListener('mouseleave', () => { isDrawing = false; ctx.closePath(); });
+
+        btnClear.addEventListener('click', () => {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            scoreText.innerText = "分數：尚未評分";
+            feedbackText.innerText = "AI 建議：無";
+        });
+
+        // 4. API 溝通與互動邏輯
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                currentUploadedBase64 = event.target.result;
+                previewImage.src = currentUploadedBase64;
+                previewImage.style.display = "block";
+                
+                btnAnalyze.disabled = false;
+                analyzeResult.innerText = "圖片已準備就緒，請點擊解析。";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        btnAnalyze.addEventListener('click', async () => {
+            analyzeResult.innerText = "AI 正在解析中，請稍候...";
+            btnAnalyze.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image_base64: currentUploadedBase64 })
+                });
+
+                if (!response.ok) throw new Error("API 回應錯誤");
+
+                const data = await response.json();
+                currentAiTags = data.ai_tags; // 儲存後端回傳的標籤
+                
+                analyzeResult.innerHTML = `
+                    <strong>解析成功！</strong><br>
+                    匹配字體：${data.matched_font.font_name}<br>
+                    風格標籤：${currentAiTags.style.join(', ')}
+                `;
+                btnGenerate.disabled = false; // 解鎖下一步按鈕
+
+            } catch (error) {
+                console.error("解析失敗:", error);
+                analyzeResult.innerText = "無法連線到後端，請確認 FastAPI 伺服器已啟動且已設定 CORS。";
+            } finally {
+                btnAnalyze.disabled = false;
+            }
+        });
+
+        btnGenerate.addEventListener('click', async () => {
+            const text = practiceTextInput.value;
+            if (!text) {
+                alert("請先輸入想練習的文字！");
+                return;
+            }
+
+            btnGenerate.innerText = "生成中...";
+            btnGenerate.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        text: text, 
+                        tags: currentAiTags 
+                    })
+                });
+
+                if (!response.ok) throw new Error("生成失敗");
+
+                const data = await response.json();
+                referenceImage.src = data.generated_image_base64; 
+                referenceImage.style.display = "block";
+
+            } catch (error) {
+                console.error("生成失敗:", error);
+                // 為了前端測試，如果後端還沒寫好，我們給一張假的佔位圖
+                referenceImage.src = "https://via.placeholder.com/300x100.png?text=" + encodeURIComponent("預覽:" + text);
+                referenceImage.style.display = "block";
+                alert("後端尚未完成，目前顯示測試用佔位圖");
+            } finally {
+                btnGenerate.innerText = "生成參考圖";
+                btnGenerate.disabled = false;
+            }
+        });
+
+        btnScore.addEventListener('click', async () => {
+            const userCanvasBase64 = canvas.toDataURL('image/png');
+            scoreText.innerText = "AI 評分中...";
+            btnScore.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/score`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_image: userCanvasBase64,
+                        reference_text: practiceTextInput.value
+                    })
+                });
+
+                if (!response.ok) throw new Error("評分失敗");
+
+                const data = await response.json();
+                scoreText.innerText = `分數：${data.score} / 100`;
+                feedbackText.innerText = `AI 建議：${data.feedback}`;
+
+            } catch (error) {
+                console.error("評分失敗:", error);
+                scoreText.innerText = "連線失敗";
+                feedbackText.innerText = "請確認後端 FastAPI 是否已實作 /score 路由。";
+            } finally {
+                btnScore.disabled = false;
+            }
+        });
+
+    </script>
+</body>
+</html>
