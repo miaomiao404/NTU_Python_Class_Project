@@ -2,55 +2,87 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FontMimic-Web 核心功能測試版</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            overscroll-behavior-y: contain;
+            overflow-x: hidden;
+            background-color: #f9f9f9;
+        }
+
+        .content-container {
+            padding: 15px;
+        }
+
+        #mimicCanvas {
+            background-color: white;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            cursor: crosshair;
+            display: block;
+            width: 100vw;
+            touch-action: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>FontMimic-Web (開發測試版)</h1>
-    <p>狀態：後端連線測試中 | 僅供電腦版滑鼠測試</p>
-    <hr>
+    <div class="content-container">
+        <h1>FontMimic-Web (開發測試版)</h1>
+        <p id="deviceStatus">狀態：正在偵測裝置...</p>
+        <hr>
 
-    <div id="section-upload">
-        <h2>步驟 1：上傳參考字體</h2>
-        <input type="file" id="imageInput" accept="image/*">
-        <br><br>
-        <img id="previewImage" style="max-width: 300px; display: none;" alt="預覽圖">
-        <br><br>
-        <button id="btnAnalyze" disabled>解析字體風格</button>
-        <p id="analyzeResult">請先上傳圖片...</p>
-    </div>
-    <hr>
+        <div id="section-upload">
+            <h2>步驟 1：上傳參考字體</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <br><br>
+            <img id="previewImage" style="max-width: 300px; display: none;" alt="預覽圖">
+            <br><br>
+            <button id="btnAnalyze" disabled>解析字體風格</button>
+            <p id="analyzeResult">請先上傳圖片...</p>
+        </div>
+        <hr>
 
-    <div id="section-generate">
-        <h2>步驟 2：生成參考圖</h2>
-        <input type="text" id="practiceTextInput" placeholder="請輸入想練習的文字 (例如：你好)">
-        <button id="btnGenerate" disabled>生成參考圖</button>
-        <br><br>
-        <img id="referenceImage" style="max-width: 300px; display: none;" alt="參考圖片">
-    </div>
-    <hr>
-
-    <div id="section-practice">
+        <div id="section-generate">
+            <h2>步驟 2：生成參考圖</h2>
+            <input type="text" id="practiceTextInput" placeholder="請輸入想練習的文字 (例如：你好)">
+            <button id="btnGenerate" disabled>生成參考圖</button>
+            <br><br>
+            <img id="referenceImage" style="max-width: 300px; display: none;" alt="參考圖片">
+        </div>
+        <hr>
+        
         <h2>步驟 3：手寫練習區</h2>
-        <canvas id="mimicCanvas" width="1000" height="400" style="border: 1px solid black; cursor: crosshair;"></canvas>
-        <br><br>
+    </div>
+
+    <canvas id="mimicCanvas"></canvas>
+
+    <div class="content-container">
+        <br>
         <button id="btnClear">清除畫布</button>
         <button id="btnScore">送出評分</button>
-    </div>
-    <hr>
+        <hr>
 
-    <div id="section-feedback">
-        <h2>步驟 4：評分與建議</h2>
-        <h3 id="scoreText">分數：尚未評分</h3>
-        <p id="feedbackText">AI 建議：無</p>
+        <div id="section-feedback">
+            <h2>步驟 4：評分與建議</h2>
+            <h3 id="scoreText">分數：尚未評分</h3>
+            <p id="feedbackText">AI 建議：無</p>
+        </div>
     </div>
 
     <script>
+
         // 1. 全域狀態管理 (State)
-        let currentUploadedBase64 = ""; // 儲存上傳圖片的 Base64
-        let currentAiTags = null;       // 儲存 AI 解析後的標籤
-        const API_BASE_URL = "http://127.0.0.1:8000"; // 預設 FastAPI 網址
+
+        let currentUploadedBase64 = ""; 
+        let currentAiTags = null;       
+        const API_BASE_URL = "http://127.0.0.1:8000"; 
 
         // 2. DOM 元素抓取
+
         const imageInput = document.getElementById('imageInput');
         const previewImage = document.getElementById('previewImage');
         const btnAnalyze = document.getElementById('btnAnalyze');
@@ -66,40 +98,79 @@
         const btnScore = document.getElementById('btnScore');
         const scoreText = document.getElementById('scoreText');
         const feedbackText = document.getElementById('feedbackText');
+        const deviceStatus = document.getElementById('deviceStatus');
 
-        // 3. Canvas 繪圖引擎初始化 (僅滑鼠事件)
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "#333333";
-        ctx.lineWidth = 4;
-        ctx.lineCap = "round";
+        // 3. 動態 Canvas 尺寸初始化 (手機/電腦版尺寸切換)
+
+        function initCanvas() {
+            const screenWidth = window.innerWidth;
+            const isMobile = screenWidth <= 768;
+
+            // 寬度 = 視窗寬度，高度依據裝置切換
+            canvas.width = screenWidth;
+            canvas.height = isMobile ? 300 : 400;
+
+            deviceStatus.innerText = `模式：${isMobile ? '行動版' : '電腦版'} | 解析度：${canvas.width} x ${canvas.height} px`;
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#333333";
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+        }
+
+        window.onload = initCanvas;
+
+        // 4. Canvas 繪圖引擎 (整合滑鼠與觸控事件)
 
         let isDrawing = false;
 
         function getCoordinates(e) {
             const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
             return {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
             };
         }
 
-        canvas.addEventListener('mousedown', (e) => {
+        function startDrawing(e) {
+            e.preventDefault();
             isDrawing = true;
             const pos = getCoordinates(e);
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
-        });
+        }
 
-        canvas.addEventListener('mousemove', (e) => {
+        function draw(e) {
+            e.preventDefault();
             if (!isDrawing) return;
             const pos = getCoordinates(e);
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
-        });
+        }
 
-        canvas.addEventListener('mouseup', () => { isDrawing = false; ctx.closePath(); });
-        canvas.addEventListener('mouseleave', () => { isDrawing = false; ctx.closePath(); });
+        function stopDrawing(e) {
+            if(e) e.preventDefault();
+            isDrawing = false;
+            ctx.closePath();
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing, { passive: false });
+        canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
 
         btnClear.addEventListener('click', () => {
             ctx.fillStyle = "#ffffff";
@@ -108,7 +179,8 @@
             feedbackText.innerText = "AI 建議：無";
         });
 
-        // 4. API 溝通與互動邏輯
+        // 5. API 溝通與互動邏輯
+
         imageInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -139,14 +211,14 @@
                 if (!response.ok) throw new Error("API 回應錯誤");
 
                 const data = await response.json();
-                currentAiTags = data.ai_tags; // 儲存後端回傳的標籤
+                currentAiTags = data.ai_tags; 
                 
                 analyzeResult.innerHTML = `
                     <strong>解析成功！</strong><br>
                     匹配字體：${data.matched_font.font_name}<br>
                     風格標籤：${currentAiTags.style.join(', ')}
                 `;
-                btnGenerate.disabled = false; // 解鎖下一步按鈕
+                btnGenerate.disabled = false; 
 
             } catch (error) {
                 console.error("解析失敗:", error);
@@ -184,7 +256,6 @@
 
             } catch (error) {
                 console.error("生成失敗:", error);
-                // 為了前端測試，如果後端還沒寫好，我們給一張假的佔位圖
                 referenceImage.src = "https://via.placeholder.com/300x100.png?text=" + encodeURIComponent("預覽:" + text);
                 referenceImage.style.display = "block";
                 alert("後端尚未完成，目前顯示測試用佔位圖");
