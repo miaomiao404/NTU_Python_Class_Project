@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from matcher import match_font
+from ai_handler import analyze_font_style, generate_feedback
 
 app = FastAPI()
 
@@ -23,18 +24,17 @@ class GenerateRequest(BaseModel):
     text: str
     tags: dict
 
+class ScoreRequest(BaseModel):
+    user_image: str
+    reference_text: str
+
 @app.get("/")
 def home():
     return {"message": "Font Mimic Backend is running"}
 
 @app.post("/analyze")
 def analyze(data: AnalyzeRequest):
-    ai_result = {
-        "style": ["round", "casual"],
-        "stroke": ["medium"],
-        "spacing": ["loose"],
-        "mood": ["friendly"]
-    }
+    ai_result = analyze_font_style(data.image_base64)
 
     matched_font = match_font(ai_result)
 
@@ -49,4 +49,18 @@ def generate(data: GenerateRequest):
 
     return {
         "generated_image_base64": image_base64
+    }
+
+@app.post("/score")
+def score(data: ScoreRequest):
+    mock_score = 85
+    feedback = generate_feedback(
+        data.user_image,
+        data.reference_text,
+        mock_score
+    )
+
+    return {
+        "score": mock_score,
+        "feedback": feedback
     }
