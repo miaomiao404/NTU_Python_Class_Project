@@ -3,9 +3,12 @@
 執行方式: python download_fonts.py
 """
 
+import sys
 import os
 import zipfile
 import requests
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 FONTS_DIR = os.path.join(os.path.dirname(__file__), "fonts")
 os.makedirs(FONTS_DIR, exist_ok=True)
