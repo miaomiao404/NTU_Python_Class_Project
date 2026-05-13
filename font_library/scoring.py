@@ -160,7 +160,7 @@ def _gemini_feedback(user_img: Image.Image, reference_img: Image.Image,
     )
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.0-flash",
         contents=[
             types.Part.from_text(text=prompt),
             types.Part.from_bytes(data=to_png(reference_img), mime_type="image/png"),
@@ -319,7 +319,11 @@ if __name__ == "__main__":
             print(f"使用者分數：{result['user_scores']}")
             print(f"目標分數：  {result['target_scores']}")
             print(f"距離：{result['distance']}，總分：{result['overall']}/100")
+            if result["ai_feedback"]:
+                print(f"\nAI 評語：\n{result['ai_feedback']}")
+            else:
+                print("（未取得 AI 評語）")
             if result["chart_png"]:
                 with open("test_chart.png", "wb") as f:
                     f.write(result["chart_png"])
-                print("雷達圖已儲存：test_chart.png")
+                print("\n雷達圖已儲存：test_chart.png")
