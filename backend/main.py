@@ -45,7 +45,10 @@ def analyze(data: AnalyzeRequest):
 
 @app.post("/generate")
 def generate(data: GenerateRequest):
-    image_base64 = generate_text_image(data.text)
+    image_base64 = generate_text_image(
+        text=data.text,
+        tags=data.tags
+    )
 
     return {
         "generated_image_base64": image_base64

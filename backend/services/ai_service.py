@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -8,7 +9,7 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-def analyze_font_style(image_base64: str) -> dict:
+def analyze_font_style_from_base64(image_base64: str) -> dict:
     """
     接收前端傳來的 base64 圖片，
     丟給 OpenAI Vision 分析，
@@ -76,9 +77,6 @@ JSON 格式必須如下：
 
 
 def fallback_tags() -> dict:
-    """
-    當 AI 沒有正常輸出 JSON 時，使用預設標籤。
-    """
     return {
         "style": ["sans"],
         "stroke": ["medium"],
@@ -87,11 +85,6 @@ def fallback_tags() -> dict:
 
 
 def validate_tags(tags: dict) -> dict:
-    """
-    檢查 AI 回傳的 tags 是否符合前端規格。
-    如果 AI 亂輸出不存在的標籤，就移除或改成預設值。
-    """
-
     allowed_style = [
         "sans", "serif", "round", "handwriting",
         "calligraphy", "casual", "formal"
@@ -130,15 +123,3 @@ def validate_tags(tags: dict) -> dict:
         "stroke": stroke,
         "mood": mood
     }
-
-
-def generate_feedback(user_image: str, reference_text: str, score: int) -> str:
-    """
-    目前先回傳固定建議。
-    之後可以改成丟給 OpenAI / Gemini 產生 AI 回饋。
-    """
-
-    return (
-        f"你這次練習的是「{reference_text}」，目前分數是 {score} 分。"
-        "整體結構已經不錯，可以再注意筆畫間距、左右比例與字的重心。"
-    )

@@ -1,49 +1,44 @@
-import base64
-from io import BytesIO
-
 import cv2
 import numpy as np
+import base64
 from PIL import Image, ImageDraw, ImageFont
 
 
-def generate_text_image(text: str, tags: dict):
+def render_text_to_image(text: str, font_path: str) -> np.ndarray:
     """
-    先用 Pillow 產生基礎文字圖片，
-    再用 OpenCV 根據 AI tags 做後處理，
-    最後回傳 base64 圖片。
+    用 Pillow 把文字畫成基礎圖片。
+    回傳 OpenCV 格式圖片。
     """
 
-    # 1. Pillow 建立白底圖片
-    img = Image.new("RGB", (500, 250), color="white")
+    image_size = (512, 512)
+    img = Image.new("RGB", image_size, "white")
     draw = ImageDraw.Draw(img)
 
-    # 2. 先用系統預設字體
-    # 之後可以改成 ImageFont.truetype("fonts/jf-openhuninn.ttf", 80)
-    font = ImageFont.load_default()
+    font_size = 120
+    font = ImageFont.truetype(font_path, font_size)
 
-    # 3. 畫文字
-    draw.text((200, 100), text, fill="black", font=font)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
 
-    # 4. Pillow image 轉成 OpenCV image
-    cv_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+    x = (image_size[0] - text_width) // 2
+    y = (image_size[1] - text_height) // 2
 
-    # 5. 根據 tags 做 OpenCV 後處理
-    cv_img = apply_style_filters(cv_img, tags)
+    draw.text((x, y), text, font=font, fill="black")
 
-    # 6. OpenCV image 轉回 base64
-    return cv2_to_base64(cv_img)
+    img_cv2 = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+    return img_cv2
 
 
-def apply_style_filters(img, tags: dict):
+def apply_style_filters(img: np.ndarray, tags: dict) -> np.ndarray:
     """
-    根據 AI tags 套用 OpenCV 效果。
+    根據 AI tags 套用 OpenCV 後處理。
     """
 
     style = tags.get("style", [])
     stroke = tags.get("stroke", [])
     mood = tags.get("mood", [])
 
-    # stroke 控制粗細
     if "bold" in stroke:
         img = apply_thickness(img, level="bold")
     elif "thin" in stroke:
@@ -51,29 +46,20 @@ def apply_style_filters(img, tags: dict):
     else:
         img = apply_thickness(img, level="medium")
 
-    # round / friendly / cute 做圓潤效果
     if "round" in style or "friendly" in mood or "cute" in mood:
         img = apply_roundness(img)
 
-    # casual / handwriting 做一點手寫粗糙感
     if "casual" in style or "handwriting" in style:
         img = apply_edge_roughness(img)
 
-    # calligraphy 做墨水暈染
     if "calligraphy" in style:
         img = apply_ink_bleed(img)
 
     return img
 
 
-def apply_thickness(img, level="medium"):
-    """
-    用 OpenCV 膨脹/侵蝕控制字體粗細。
-    """
-
+def apply_thickness(img: np.ndarray, level: str = "medium") -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # 黑字白底，先反轉成白字黑底，方便處理
     _, binary = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
 
     if level == "bold":
@@ -84,16 +70,11 @@ def apply_thickness(img, level="medium"):
         kernel = np.ones((2, 2), np.uint8)
         binary = cv2.erode(binary, kernel, iterations=1)
 
-    # 轉回黑字白底
     result = 255 - binary
     return cv2.cvtColor(result, cv2.COLOR_GRAY2BGR)
 
 
-def apply_roundness(img):
-    """
-    用輕微模糊 + 二值化，模擬比較圓潤的邊緣。
-    """
-
+def apply_roundness(img: np.ndarray) -> np.ndarray:
     blurred = cv2.GaussianBlur(img, (3, 3), 0)
 
     gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
@@ -102,30 +83,22 @@ def apply_roundness(img):
     return cv2.cvtColor(binary, cv2.COLOR_GRAY2BGR)
 
 
-def apply_edge_roughness(img):
-    """
-    加入少量雜訊，模擬手寫或 casual 字體的邊緣不規則。
-    """
-
+def apply_edge_roughness(img: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     noise = np.random.normal(0, 12, gray.shape).astype(np.int16)
     noisy = np.clip(gray.astype(np.int16) + noise, 0, 255).astype(np.uint8)
 
     _, binary = cv2.threshold(noisy, 200, 255, cv2.THRESH_BINARY)
-
     return cv2.cvtColor(binary, cv2.COLOR_GRAY2BGR)
 
 
-def apply_ink_bleed(img):
-    """
-    用 Gaussian blur 模擬墨水暈染。
-    """
-
-    return cv2.GaussianBlur(img, (5, 5), 0)
+def apply_ink_bleed(img: np.ndarray) -> np.ndarray:
+    blurred = cv2.GaussianBlur(img, (5, 5), 0)
+    return blurred
 
 
-def cv2_to_base64(img):
+def cv2_to_base64(img: np.ndarray) -> str:
     """
     OpenCV 圖片轉成前端 <img> 可直接顯示的 base64。
     """
@@ -136,5 +109,10 @@ def cv2_to_base64(img):
         raise ValueError("圖片轉換 base64 失敗")
 
     img_base64 = base64.b64encode(buffer).decode("utf-8")
-
     return "data:image/png;base64," + img_base64
+
+
+def generate_styled_text_base64(text: str, tags: dict, font_path: str) -> str:
+    base_img = render_text_to_image(text, font_path)
+    styled_img = apply_style_filters(base_img, tags)
+    return cv2_to_base64(styled_img)
