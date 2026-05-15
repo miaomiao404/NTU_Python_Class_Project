@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from matcher import match_font
 from ai_handler import analyze_font_style, generate_feedback
+from scoring import score_user_writing
 
 app = FastAPI()
 
@@ -26,6 +27,7 @@ class GenerateRequest(BaseModel):
 
 class ScoreRequest(BaseModel):
     user_image: str
+    reference_image: str
     reference_text: str
 
 @app.get("/")
@@ -35,7 +37,6 @@ def home():
 @app.post("/analyze")
 def analyze(data: AnalyzeRequest):
     ai_result = analyze_font_style(data.image_base64)
-
     matched_font = match_font(ai_result)
 
     return {
@@ -45,25 +46,34 @@ def analyze(data: AnalyzeRequest):
 
 @app.post("/generate")
 def generate(data: GenerateRequest):
+    matched_font = match_font(data.tags)
+
     image_base64 = generate_text_image(
         text=data.text,
-        tags=data.tags
+        tags=data.tags,
+        font_path=matched_font["file_path"]
     )
 
     return {
-        "generated_image_base64": image_base64
+        "generated_image_base64": image_base64,
+        "matched_font": matched_font
     }
 
 @app.post("/score")
 def score(data: ScoreRequest):
-    mock_score = 85
+    #新增 reference image
+    score_value = score_user_writing(
+        reference_image_base64=data.reference_image,
+        user_image_base64=data.user_image
+    )
+
     feedback = generate_feedback(
-        data.user_image,
-        data.reference_text,
-        mock_score
+        user_image=data.user_image,
+        reference_text=data.reference_text,
+        score=score_value
     )
 
     return {
-        "score": mock_score,
+        "score": score_value,
         "feedback": feedback
     }

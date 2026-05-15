@@ -1,15 +1,48 @@
 import json
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REGISTRY_PATH = os.path.join(BASE_DIR, "registry.json")
 
 def load_registry():
-    with open("registry.json", "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(REGISTRY_PATH, "r", encoding="utf-8") as f:
+            registry = json.load(f)
 
+        if not isinstance(registry, list):
+            return fallback_registry()
+
+        return registry
+
+    except Exception as error:
+        print(f"[matcher] registry.json 載入失敗：{error}")
+        return fallback_registry()
+
+def fallback_registry():
+    return [
+        {
+            "font_name": "CuteHandwriting",
+            "file_path": "fonts/cute.ttf",
+            "tags": {
+                "style": ["cute", "round", "casual"],
+                "stroke": ["medium"],
+                "spacing": ["loose"],
+                "mood": ["friendly", "warm"]
+            }
+        }
+    ]
 
 def calculate_score(ai_tags, font_tags):
     score = 0
+    categories = ["style", "stroke", "mood"]
 
-    for category in ai_tags:
+    if not isinstance(ai_tags, dict):
+        ai_tags = {}
+
+    if not isinstance(font_tags, dict):
+        font_tags = {}
+
+    for category in categories:
         ai_values = set(ai_tags.get(category, []))
         font_values = set(font_tags.get(category, []))
 
@@ -26,11 +59,16 @@ def match_font(ai_tags):
     best_score = -1
 
     for font in registry:
-        score = calculate_score(ai_tags, font["tags"])
+        font_tags = font.get("tags", {})
+        score = calculate_score(ai_tags, font_tags)
 
         if score > best_score:
             best_score = score
             best_font = font
+
+        if best_font is None:
+            best_font = fallback_registry()[0]
+            best_score = 0
 
     return {
         "font_name": best_font["font_name"],
