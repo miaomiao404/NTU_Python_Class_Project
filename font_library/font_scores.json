@@ -1,0 +1,132 @@
+[
+  {
+    "font_name": "芫荽 Iansui 手寫楷書",
+    "filename": "Iansui-Regular.ttf",
+    "scores": { "weight": 3, "spacing": 3, "aspect": 3, "slant": 2, "roundness": 3 }
+  },
+  {
+    "font_name": "霞鶩文楷 LXGWWenKai",
+    "filename": "LXGWWenKai-Regular.ttf",
+    "scores": { "weight": 3, "spacing": 3, "aspect": 3, "slant": 2, "roundness": 3 }
+  },
+  {
+    "font_name": "霞鶩文楷 Mono TC",
+    "filename": "LXGWWenKaiMonoTC-Regular.ttf",
+    "scores": { "weight": 3, "spacing": 3, "aspect": 3, "slant": 2, "roundness": 3 }
+  },
+  {
+    "font_name": "流間毛草 LiuJianMaoCao",
+    "filename": "LiuJianMaoCao-Regular.ttf",
+    "scores": { "weight": 1, "spacing": 5, "aspect": 1, "slant": 2, "roundness": 1 }
+  },
+  {
+    "font_name": "龍藏草書 LongCang",
+    "filename": "LongCang-Regular.ttf",
+    "scores": { "weight": 1, "spacing": 5, "aspect": 4, "slant": 5, "roundness": 1 }
+  },
+  {
+    "font_name": "馬尚正楷 MaShanZheng",
+    "filename": "MaShanZheng-Regular.ttf",
+    "scores": { "weight": 3, "spacing": 2, "aspect": 1, "slant": 1, "roundness": 4 }
+  },
+  {
+    "font_name": "Noto Sans SC 黑體（簡中）",
+    "filename": "NotoSansSC-VF.ttf",
+    "scores": { "weight": 1, "spacing": 5, "aspect": 3, "slant": 2, "roundness": 2 }
+  },
+  {
+    "font_name": "Noto Sans TC 黑體（繁中）",
+    "filename": "NotoSansTC-VF.ttf",
+    "scores": { "weight": 1, "spacing": 5, "aspect": 3, "slant": 3, "roundness": 2 }
+  },
+  {
+    "font_name": "Noto Serif SC 宋體（簡中）",
+    "filename": "NotoSerifSC-VF.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 5, "slant": 5, "roundness": 2 }
+  },
+  {
+    "font_name": "Noto Serif TC 宋體（繁中）",
+    "filename": "NotoSerifTC-VF.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 4, "slant": 5, "roundness": 3 }
+  },
+  {
+    "font_name": "思源黑體 SourceHanSansTC",
+    "filename": "SourceHanSansTC-Regular.otf",
+    "scores": { "weight": 4, "spacing": 2, "aspect": 3, "slant": 3, "roundness": 3 }
+  },
+  {
+    "font_name": "思源宋體 SourceHanSerifTC",
+    "filename": "SourceHanSerifTC-Regular.otf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 4, "slant": 5, "roundness": 3 }
+  },
+  {
+    "font_name": "研習明體 StudyMingCN",
+    "filename": "StudyMingCN-Regular.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 4, "slant": 4, "roundness": 2 }
+  },
+  {
+    "font_name": "ZCOOL 圓潤黑體 KuaiLe",
+    "filename": "ZCOOLKuaiLe-Regular.ttf",
+    "scores": { "weight": 4, "spacing": 1, "aspect": 3, "slant": 4, "roundness": 5 }
+  },
+  {
+    "font_name": "ZCOOL 毛筆行楷 QingKeHuangYou",
+    "filename": "ZCOOLQingKeHuangYou-Regular.ttf",
+    "scores": { "weight": 5, "spacing": 1, "aspect": 1, "slant": 1, "roundness": 5 }
+  },
+  {
+    "font_name": "ZCOOL 小薇 XiaoWei",
+    "filename": "ZCOOLXiaoWei-Regular.ttf",
+    "scores": { "weight": 4, "spacing": 2, "aspect": 3, "slant": 4, "roundness": 4 }
+  },
+  {
+    "font_name": "之芒行書 ZhiMangXing",
+    "filename": "ZhiMangXing-Regular.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 2, "slant": 3, "roundness": 2 }
+  },
+  {
+    "font_name": "jf open 粉圓",
+    "filename": "jf-openhuninn-2.1.ttf",
+    "scores": { "weight": 4, "spacing": 1, "aspect": 5, "slant": 4, "roundness": 4 }
+  },
+  {
+    "font_name": "齊伋體 QiJi 明代木刻",
+    "filename": "qiji-combo.ttf",
+    "scores": { "weight": 3, "spacing": 3, "aspect": 2, "slant": 1, "roundness": 1 }
+  },
+  {
+    "font_name": "Zpix 像素體",
+    "filename": "zpix.ttf",
+    "scores": { "weight": 4, "spacing": 1, "aspect": 5, "slant": 3, "roundness": 5 }
+  },
+  {
+    "font_name": "全字庫正宋體 TW-Sung",
+    "filename": "TW-Sung-98_1.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 4, "slant": 5, "roundness": 3 }
+  },
+  {
+    "font_name": "全字庫正楷體 TW-Kai",
+    "filename": "TW-Kai-98_1.ttf",
+    "scores": { "weight": 3, "spacing": 3, "aspect": 3, "slant": 2, "roundness": 3 }
+  },
+  {
+    "font_name": "cwTeX 明體",
+    "filename": "cwTeXMing-Medium.ttf",
+    "scores": { "weight": 2, "spacing": 4, "aspect": 4, "slant": 4, "roundness": 2 }
+  },
+  {
+    "font_name": "cwTeX 楷書",
+    "filename": "cwTeXKai-Medium.ttf",
+    "scores": { "weight": 3, "spacing": 2, "aspect": 1, "slant": 1, "roundness": 4 }
+  },
+  {
+    "font_name": "cwTeX 仿宋體",
+    "filename": "cwTeXFangSong-Medium.ttf",
+    "scores": { "weight": 2, "spacing": 3, "aspect": 2, "slant": 3, "roundness": 2 }
+  },
+  {
+    "font_name": "cwTeX 圓體",
+    "filename": "cwTeXYen-Medium.ttf",
+    "scores": { "weight": 4, "spacing": 1, "aspect": 4, "slant": 4, "roundness": 4 }
+  }
+]

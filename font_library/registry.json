@@ -1,0 +1,209 @@
+[
+  {
+    "font_name": "馬尚正楷 MaShanZheng",
+    "file_path": "font_library/fonts/MaShanZheng-Regular.ttf",
+    "tags": {
+      "style": ["楷書", "traditional", "regular"],
+      "stroke": ["medium"],
+      "mood": ["elegant", "classic"]
+    }
+  },
+  {
+    "font_name": "之芒行書 ZhiMangXing",
+    "file_path": "font_library/fonts/ZhiMangXing-Regular.ttf",
+    "tags": {
+      "style": ["行書", "semi-cursive", "flowing"],
+      "stroke": ["medium", "dynamic"],
+      "mood": ["artistic", "free"]
+    }
+  },
+  {
+    "font_name": "龍藏草書 LongCang",
+    "file_path": "font_library/fonts/LongCang-Regular.ttf",
+    "tags": {
+      "style": ["草書", "cursive", "brush"],
+      "stroke": ["thick", "expressive"],
+      "mood": ["wild", "artistic"]
+    }
+  },
+  {
+    "font_name": "ZCOOL 毛筆行楷 QingKeHuangYou",
+    "file_path": "font_library/fonts/ZCOOLQingKeHuangYou-Regular.ttf",
+    "tags": {
+      "style": ["行楷", "brush", "semi-formal"],
+      "stroke": ["medium", "brush"],
+      "mood": ["warm", "artistic"]
+    }
+  },
+  {
+    "font_name": "ZCOOL 圓潤黑體 KuaiLe",
+    "file_path": "font_library/fonts/ZCOOLKuaiLe-Regular.ttf",
+    "tags": {
+      "style": ["黑體", "round", "modern"],
+      "stroke": ["medium"],
+      "mood": ["friendly", "casual"]
+    }
+  },
+  {
+    "font_name": "流間毛草 LiuJianMaoCao",
+    "file_path": "font_library/fonts/LiuJianMaoCao-Regular.ttf",
+    "tags": {
+      "style": ["草書", "cursive", "brush"],
+      "stroke": ["thin", "dynamic"],
+      "mood": ["free", "artistic"]
+    }
+  },
+  {
+    "font_name": "Noto Sans TC 黑體",
+    "file_path": "font_library/fonts/NotoSansTC-Regular.otf",
+    "tags": {
+      "style": ["黑體", "sans-serif", "modern"],
+      "stroke": ["medium"],
+      "mood": ["clean", "neutral"]
+    }
+  },
+  {
+    "font_name": "Noto Serif TC 宋體",
+    "file_path": "font_library/fonts/NotoSerifTC-Regular.otf",
+    "tags": {
+      "style": ["宋體", "serif", "traditional"],
+      "stroke": ["thin"],
+      "mood": ["classic", "elegant"]
+    }
+  },
+  {
+    "font_name": "霞鶩文楷 LXGWWenKai",
+    "file_path": "font_library/fonts/LXGWWenKai-Regular.ttf",
+    "tags": {
+      "style": ["楷書", "handwriting", "semi-casual"],
+      "stroke": ["medium"],
+      "mood": ["warm", "friendly"]
+    }
+  },
+  {
+    "font_name": "霞鶩文楷 TC LXGWWenKaiTC",
+    "file_path": "font_library/fonts/LXGWWenKaiTC-Regular.ttf",
+    "tags": {
+      "style": ["楷書", "handwriting", "semi-casual", "traditional-chinese"],
+      "stroke": ["medium"],
+      "mood": ["warm", "friendly"]
+    }
+  },
+  {
+    "font_name": "jf open 粉圓",
+    "file_path": "font_library/fonts/jf-openhuninn-2.1.ttf",
+    "tags": {
+      "style": ["圓體", "round", "modern"],
+      "stroke": ["medium"],
+      "mood": ["friendly", "cute", "casual"]
+    }
+  },
+  {
+    "font_name": "cwTeX 明體 Ming",
+    "file_path": "font_library/fonts/cwTeXMing-Medium.ttf",
+    "tags": {
+      "style": ["明體", "serif", "traditional"],
+      "stroke": ["thin"],
+      "mood": ["classic", "formal"]
+    }
+  },
+  {
+    "font_name": "cwTeX 楷書 Kai",
+    "file_path": "font_library/fonts/cwTeXKai-Medium.ttf",
+    "tags": {
+      "style": ["楷書", "traditional", "regular"],
+      "stroke": ["medium"],
+      "mood": ["classic", "elegant"]
+    }
+  },
+  {
+    "font_name": "cwTeX 仿宋體 FangSong",
+    "file_path": "font_library/fonts/cwTeXFangSong-Medium.ttf",
+    "tags": {
+      "style": ["仿宋體", "serif", "traditional"],
+      "stroke": ["thin"],
+      "mood": ["classic", "literary"]
+    }
+  },
+  {
+    "font_name": "cwTeX 圓體 Yen",
+    "file_path": "font_library/fonts/cwTeXYen-Medium.ttf",
+    "tags": {
+      "style": ["圓體", "round", "modern"],
+      "stroke": ["medium"],
+      "mood": ["friendly", "casual"]
+    }
+  },
+  {
+    "font_name": "思源黑體 Source Han Sans TC",
+    "file_path": "font_library/fonts/SourceHanSansTC-Regular.otf",
+    "tags": {
+      "style": ["黑體", "sans-serif", "modern"],
+      "stroke": ["medium"],
+      "mood": ["clean", "professional"]
+    }
+  },
+  {
+    "font_name": "思源宋體 Source Han Serif TC",
+    "file_path": "font_library/fonts/SourceHanSerifTC-Regular.otf",
+    "tags": {
+      "style": ["宋體", "serif", "traditional"],
+      "stroke": ["thin"],
+      "mood": ["elegant", "classic"]
+    }
+  },
+  {
+    "font_name": "齊伋體 QiJi 明代木刻",
+    "file_path": "font_library/fonts/qiji.ttf",
+    "tags": {
+      "style": ["明朝", "woodblock", "classical", "antique"],
+      "stroke": ["thin", "sharp"],
+      "mood": ["ancient", "artistic"]
+    }
+  },
+  {
+    "font_name": "芫荽 Iansui 手寫楷書",
+    "file_path": "font_library/fonts/Iansui-Regular.ttf",
+    "tags": {
+      "style": ["楷書", "handwriting", "casual"],
+      "stroke": ["medium"],
+      "mood": ["natural", "warm"]
+    }
+  },
+  {
+    "font_name": "研習明體 StudyMing",
+    "file_path": "font_library/fonts/StudyMing-Regular.ttf",
+    "tags": {
+      "style": ["明體", "serif", "educational"],
+      "stroke": ["medium"],
+      "mood": ["clean", "formal"]
+    }
+  },
+  {
+    "font_name": "Zpix 像素體",
+    "file_path": "font_library/fonts/zpix.ttf",
+    "tags": {
+      "style": ["像素體", "pixel", "digital"],
+      "stroke": ["square"],
+      "mood": ["retro", "fun", "unique"]
+    }
+  },
+  {
+    "font_name": "全字庫正宋體 TW-Sung",
+    "file_path": "font_library/fonts/TW-Sung-98_1.ttf",
+    "tags": {
+      "style": ["宋體", "serif", "traditional"],
+      "stroke": ["thin"],
+      "mood": ["classic", "formal"]
+    }
+  },
+  {
+    "font_name": "全字庫正楷體 TW-Kai",
+    "file_path": "font_library/fonts/TW-Kai-98_1.ttf",
+    "tags": {
+      "style": ["楷書", "traditional", "regular"],
+      "stroke": ["medium"],
+      "mood": ["classic", "elegant"]
+    }
+  }
+]
