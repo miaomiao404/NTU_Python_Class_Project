@@ -37,3 +37,24 @@ def match_font(ai_tags):
         "file_path": best_font["file_path"],
         "score": best_score
     }
+
+# --- 測試啟動區塊 ---
+if __name__ == "__main__":
+    # 模擬 Gemini AI 看完圖片後，產生的標籤 (可以隨意修改測試)
+    mock_ai_input = {
+        "style": ["cute", "round"],
+        "stroke": ["medium"],
+        "spacing": ["loose"],
+        "mood": ["warm", "friendly"]
+    }
+    
+    print("🔍 正在接收 AI 標籤，開始匹配字體...")
+    
+    # 呼叫妳寫好的函數，並把結果存起來
+    result = match_font(mock_ai_input)
+    
+    # 印出結果
+    print("\n🎉 匹配完成！")
+    print(f"👉 推薦字體：{result['font_name']}")
+    print(f"📁 檔案位置：{result['file_path']}")
+    print(f"⭐ 吻合分數：{result['score']} 分")
