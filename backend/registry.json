@@ -1,22 +1,32 @@
 [
   {
-    "font_id": "font_001",
-    "font_name": "default_standard_font",
-    "file_path": "fonts/default.ttf",
+    "font_name": "CuteHandwriting",
+    "file_path": "fonts/cute.ttf",
     "tags": {
-      "style": ["regular", "standard"],
+      "style": ["cute", "round", "casual"],
       "stroke": ["medium"],
-      "mood": ["neutral"]
+      "spacing": ["loose"],
+      "mood": ["friendly", "warm"]
     }
   },
   {
-    "font_id": "font_002",
-    "font_name": "test_round_handwriting",
-    "file_path": "fonts/test_hand.ttf",
+    "font_name": "FormalHandwriting",
+    "file_path": "fonts/formal.ttf",
     "tags": {
-      "style": ["round", "handwriting"],
+      "style": ["neat", "formal"],
       "stroke": ["thin"],
-      "mood": ["warm", "cute"]
+      "spacing": ["tight"],
+      "mood": ["serious", "clean"]
+    }
+  },
+  {
+    "font_name": "BoldHandwriting",
+    "file_path": "fonts/bold.ttf",
+    "tags": {
+      "style": ["strong", "clear"],
+      "stroke": ["thick"],
+      "spacing": ["normal"],
+      "mood": ["confident"]
     }
   }
 ]
